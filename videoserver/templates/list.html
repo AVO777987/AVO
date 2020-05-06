@@ -1,0 +1,246 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+<div class="header"><a href="/videoserver/"><img src={% static 'images/logo.png' %}></a></div>
+<div class="left-sidebar">
+    <ul>
+    {% for i in menu %}
+        <li><a href="/videoserver/?cat={{ i.url }}">{{ i.name }}</a></li>
+    {% endfor %}
+    </ul>
+</div>
+<div class="content">
+    <table class="table_1">
+        {% if url == 'job' %}
+            <th>№</th>
+            <th>Название</th>
+            <th>Видеосервер</th>
+            <th>Видеоисточник</th>
+            <th>Командная строка</th>
+            <th>Время записи</th>
+            <th>Время перехлеста</th>
+            <th>Перекодирование</th>
+            <th>Расписание</th>
+            <th>Способ хранения</th>
+            <th>Последний запуск</th>
+            <th>Запись включена</th>
+            <th>Редактировать</th>
+            {% for i in job %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ i.name }}</td>
+                        <td>{{ i.videoserver }}</td>
+                        <td>{{ i.video_source.url }}</td>
+                        <td>{{ i.command_line.value }}</td>
+                        <td>{{ i.record_time }}</td>
+                        <td>{{ i.intersection }}</td>
+                        <td>{{ i.transcode }}</td>
+                        <td>{{ i.schedule.calendar }}</td>
+                        <td>{{ i.storage.size }}</td>
+                        <td>{{ i.take_time }}</td>
+                        {% if i.active == 0 %}
+                            <td>Нет</td>
+                        {% else %}
+                            <td>Да</td>
+                        {% endif %}
+                        <td><a href="edit/?cat={{ url }}&dev={{ i.id }}"><i class="fa fa-pencil-square-o fa-2x"></i></a></td>
+                    </tr>
+                {% endfor %}
+        {% endif %}
+        {% if url == 'drive' %}
+            <th>№</th>
+            <th>Видеосервер</th>
+            <th>Путь</th>
+            <th>Минимальный размер свободного пространства %</th>
+            <th>Активен</th>
+            <th>Редактировать</th>
+            {% for i in drive %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ i.videoserver }}</td>
+                    <td>{{ i.path }}</td>
+                    <td>{{ i.min_free_space_percent }}</td>
+                    {% if i.active == 0 %}
+                        <td>Нет</td>
+                    {% else %}
+                        <td>Да</td>
+                    {% endif %}
+                    <td><a href="edit/?cat={{ url }}&dev={{ i.id }}"><i class="fa fa-pencil-square-o fa-2x"></i></a></td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+        {% if url == 'backup' %}
+            <th>№</thead>
+            <th>Видеосервер</th>
+            <th>Путь</th>
+            <th>Минимальный размер свободного пространства %</th>
+            <th>Активен</th>
+            <th>Редактировать</th>
+            {% for i in backup %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ i.videoserver }}</td>
+                    <td>{{ i.path }}</td>
+                    <td>{{ i.min_free_space_percent }}</td>
+                    {% if i.active == 0 %}
+                        <td>Нет</td>
+                    {% else %}
+                        <td>Да</td>
+                    {% endif %}
+                    <td><a href="edit/?cat={{ url }}&dev={{ i.id }}"><i class="fa fa-pencil-square-o fa-2x"></i></a></td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+        {% if url == 'video_source' %}
+            <th>№</th>
+            <th>URL</th>
+            <th>Опции</th>
+            <th>Редактировать</th>
+            {% for i in video_source %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ i.url }}</td>
+                    <td>{{ i.options }}</td>
+                    <td><a href="edit/?cat={{ url }}&dev={{ i.id }}"><i class="fa fa-pencil-square-o fa-2x"></i></a></td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+        {% if url == 'schedule' %}
+            <th>№</th>
+            <th>Календарь</th>
+            <th>ПН</th>
+            <th>ВТ</th>
+            <th>СР</th>
+            <th>ЧТ</th>
+            <th>ПТ</th>
+            <th>СБ</th>
+            <th>ВС</th>
+            <th>Сутки (00-23)</th>
+            <th>Запись по событиям до (сек)</th>
+            <th>После</th>
+            <th>Редактировать</th>
+            {% for i in schedule %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ i.calendar }}</td>
+                        {% for n in i.week_days|make_list %}
+                            {% if n == '0' %}
+                                <td>-</td>
+                            {% endif %}
+                            {% if n == '1' %}
+                                <td>+</td>
+                            {% endif %}
+                        {% endfor %}
+                    <td>{{ i.hours }}</td>
+                    <td>{{ i.event_second_before }}</td>
+                    <td>{{ i.event_second_after }}</td>
+                    <td><a href="edit/?cat={{ url }}&dev={{ i.id }}"><i class="fa fa-pencil-square-o fa-2x"></i></a></td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+        {% if url == 'storage' %}
+            <th>№</th>
+            <th>Размер оперативного архива в сутках</th>
+            <th>+ часов</th>
+            <th>Переносить в архив длительного хранения</th>
+            <th>Размер архива длительного хранения</th>
+            <th>Редактировать</th>
+            {% for i in storage %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ i.size }}</td>
+                    <td>{{ i.size_add_hours }}</td>
+                    <td>{{ i.backup }}</td>
+                    <td>{{ i.backup_size }}</td>
+                    <td><a href="edit/?cat={{ url }}&dev={{ i.id }}"><i class="fa fa-pencil-square-o fa-2x"></i></a></td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+        {% if url == 'command_line' %}
+            <th>№</th>
+            <th>Командная строка</th>
+            <th>Редактировать</th>
+            {% for i in command_line %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ i.value }}</td>
+                    <td><a href="edit/?cat={{ url }}&dev={{ i.id }}"><i class="fa fa-pencil-square-o fa-2x"></i></a></td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+        {% if url == 'smtp_server' %}
+            <th>№</th>
+            <th>Видеосервер</th>
+            <th>Хост</th>
+            <th>Приёмный порт</th>
+            <th>Кодировка</th>
+            <th>Активен</th>
+            <th>Редактировать</th>
+            {% for i in smtp_server %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ i.videoserver }}</td>
+                    <td>{{ i.host }}</td>
+                    <td>{{ i.port }}</td>
+                    <td>{{ i.encoding }}</td>
+                    {% if i.active == 0 %}
+                            <td>Нет</td>
+                        {% else %}
+                            <td>Да</td>
+                    {% endif %}
+                    <td><a href="edit/?cat={{ url }}&dev={{ i.id }}"><i class="fa fa-pencil-square-o fa-2x"></i></a></td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+        {% if url == 'calendar' %}
+            <th>№</th>
+            <th>Календарь</th>
+            <th>Месяц</th>
+            <th>День</th>
+            <th>Рабочий день</th>
+            <th>Редактировать</th>
+            {% for i in calendar %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ i.year }}</td>
+                    <td>{{ i.year }}</td>
+                    <td>{{ i.year }}</td>
+                    <td>{{ i.year }}</td>
+                    <td><a href="edit/?cat={{ url }}&dev={{ i.id }}"><i class="fa fa-pencil-square-o fa-2x"></i></a></td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+        {% if url == 'logs' %}
+            <th>№</th>
+            <th>Время</th>
+            <th>Таблица</th>
+            <th>Поле</th>
+            <th>Старое значение</th>
+            <th>Новое значение</th>
+            {% for i in log %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ i.time }}</td>
+                    <td>{{ i.table }}</td>
+                    <td>{{ i.fields }}</td>
+                    <td>{{ i.oldvalues }}</td>
+                    <td>{{ i.newvalues }}</td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+
+    </table>
+    <form name="add" method="post" action="/videoserver/create/?cat={{ url }}">
+                {% csrf_token %}
+        <input class="button24" type="submit" value="Добавить">
+    </form>
+</div>
+</body>
+</html>

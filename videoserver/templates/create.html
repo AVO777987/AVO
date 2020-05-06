@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+<div class="header"><a href="/videoserver/"><img src={% static 'images/logo.png' %}></a></div>
+<div class="left-sidebar">
+    <ul>
+    {% for i in menu %}
+        <li><a href="/videoserver/?cat={{ i.url }}">{{ i.name }}</a></li>
+    {% endfor %}
+    </ul>
+</div>
+<div class="content">
+    <form name="edit" method="post" action="/videoserver/update/?action=create&cat={{ url }}">
+        {% csrf_token %}
+        {% if url == 'job' %}
+            <table class="table_2">
+                <tr><th>Название камеры</th><td><input class="select" type="text" name="name"></td>
+                <tr><th>Видеосервер</th><td><input class="select" type="text"  name="videoserver"></td>
+                <tr><th>Видеоисточник</th><td>
+                    <select class="select" name="video_source_id">
+                        {% for i in video_source %}
+                            <option value="{{ i.id }}">{{ i.url }}</option>
+                        {% endfor %}
+                    </select></td>
+                <tr><th>Командная строка</th><td>
+                    <select class="select" name="command_line_id">
+                    {% for i in command_line %}
+                        <option value="{{ i.id }}">{{ i.value }}</option>
+                    {% endfor %}
+                    </select></td>
+                <tr><th>Время записи</th><td><input type="text" class="select" name="record_time"></td>
+                <tr><th>Время перехлеста</th><td><input type="text" class="select" name="intersection"></td>
+                <tr><th>Перекодирование</th><td><input type="text" class="select" name="transcode"></td>
+                <tr><th>Расписание</th><td>
+                    <select class="select" name="schedule_id">
+                    {% for i in schedule %}
+                        <option value="{{ i.id }}">{{ i.calendar }}</option>
+                    {% endfor %}
+                    </select></td>
+                <tr><th>Способ хранения</th><td>
+                    <select class="select" name="storage_id">
+                    {% for i in storage %}
+                        <option value="{{ i.id }}">{{ i.size }}</option>
+                    {% endfor %}
+                    </select></td>
+                    {% if job.active == 0 %}
+                        <tr><th><input type="radio" name="active" value="1">Включена</th>
+                        <tr><th><input type="radio" name="active" value="0" checked>Выключена</th>
+                    {% else %}
+                        <tr><th><input type="radio" name="active" value="1" checked >Включена</th>
+                        <tr><th><input type="radio" name="active" value="0">Выключена</th>
+                    {% endif %}
+            </table>
+        {% endif %}
+        {% if url == 'drive' %}
+            <table class="table_2">
+                <tr><th>Видеосервер</th><td><input class="select" type="text" name="videoserver"></td>
+                <tr><th>Путь</th><td><input class="select" type="text"  name="path"></td>
+                <tr><th>Минимальный размер свободного пространства %</th><td><input type="text" class="select" name="min_free_space_percent"></td>
+                    {% if job.active == 0 %}
+                        <tr><th><input type="radio" name="active" value="1">Включена</th>
+                        <tr><th><input type="radio" name="active" value="0" checked>Выключена</th>
+                    {% else %}
+                        <tr><th><input type="radio" name="active" value="1" checked >Включена</th>
+                        <tr><th><input type="radio" name="active" value="0">Выключена</th>
+                    {% endif %}
+            </table>
+        {% endif %}
+        {% if url == 'backup' %}
+            <table class="table_2">
+                <tr><th>Видеосервер</th><td><input class="select" type="text" name="videoserver"></td>
+                <tr><th>Путь</th><td><input class="select" type="text"  name="path"></td>
+                <tr><th>Минимальный размер свободного пространства %</th><td><input type="text" class="select" name="min_free_space_percent"></td>
+                    {% if job.active == 0 %}
+                        <tr><th><input type="radio" name="active" value="1">Включена</th>
+                        <tr><th><input type="radio" name="active" value="0" checked>Выключена</th>
+                    {% else %}
+                        <tr><th><input type="radio" name="active" value="1" checked >Включена</th>
+                        <tr><th><input type="radio" name="active" value="0">Выключена</th>
+                    {% endif %}
+            </table>
+        {% endif %}
+        {% if url == 'video_source' %}
+            <table class="table_2">
+                <tr><th>URL</th><td><input class="select" type="text" name="url"></td>
+                <tr><th>Опции</th><td><input class="select" type="text"  name="options"></td>
+            </table>
+        {% endif %}
+
+            <input class="button24" type="submit" name="commit" value="Сохранить">
+        </form>
+</div>
+</body>
+</html>
