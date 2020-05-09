@@ -98,6 +98,31 @@
                 <tr><th>Опции</th><td><input class="select" type="text"  name="options" value="{{ video_source.options }}"></td>
             </table>
         {% endif %}
+        {% if url == 'schedule' %}
+            <input type="hidden" name="schedule_id" value = "{{ schedule.id }}">
+            <table class="table_2">
+                <tr><th>Календарь</th><td><input class="select" type="text" name="calendar" value="{{ schedule.calendar }}"></td>
+                <tr><th>Дни недели</th><td><input class="select" type="text"  name="week_days" value="{{ schedule.week_days }}"></td>
+                <tr><th>Сутки</th><td><input class="select" type="text"  name="hours" value="{{ schedule.hours }}"></td>
+                <tr><th>Запись по событиям До</th><td><input class="select" type="text"  name="event_second_before" value="{{ schedule.event_second_before }}"></td>
+                <tr><th>Запись по событиям После</th><td><input class="select" type="text"  name="event_second_after" value="{{ schedule.event_second_after }}"></td>
+            </table>
+        {% endif %}
+        {% if url == 'storage' %}
+            <input type="hidden" name="storage_id" value = "{{ storage.id }}">
+            <table class="table_2">
+                <tr><th>Размер оперативного архива в сутках	</th><td><input class="select" type="text" name="size" value="{{ storage.size }}"></td>
+                <tr><th>+ часов</th><td><input class="select" type="text"  name="size_add_hours" value="{{ storage.size_add_hours }}"></td>
+                <tr><th>Переносить в архив длительного хранения</th><td><input class="select" type="text"  name="backup" value="{{ storage.backup }}"></td>
+                <tr><th>Размер архива длительного хранения</th><td><input class="select" type="text"  name="backup_size" value="{{ storage.backup_size }}"></td>
+            </table>
+        {% endif %}
+        {% if url == 'command_line' %}
+            <input type="hidden" name="command_line_id" value = "{{ command_line.id }}">
+            <table class="table_2">
+                <tr><th>Командная строка</th><td><input class="select" type="text" name="value" value="{{ command_line.value }}"></td>
+            </table>
+        {% endif %}
             <input class="button24" type="submit" name="commit" value="Сохранить">
         </form>
 </div>

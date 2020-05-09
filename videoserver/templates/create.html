@@ -93,9 +93,30 @@
                 <tr><th>Опции</th><td><input class="select" type="text"  name="options"></td>
             </table>
         {% endif %}
-
-            <input class="button24" type="submit" name="commit" value="Сохранить">
-        </form>
+        {% if url == 'schedule' %}
+            <table class="table_2">
+                <tr><th>Календарь</th><td><input class="select" type="text" name="calendar"></td>
+                <tr><th>Дни недели</th><td><input class="select" type="text"  name="week_days"></td>
+                <tr><th>Сутки</th><td><input class="select" type="text"  name="hours"></td>
+                <tr><th>Запись по событиям До</th><td><input class="select" type="text"  name="event_second_before" ></td>
+                <tr><th>Запись по событиям После</th><td><input class="select" type="text"  name="event_second_after"></td>
+            </table>
+        {% endif %}
+        {% if url == 'storage' %}
+            <table class="table_2">
+                <tr><th>Размер оперативного архива в сутках	</th><td><input class="select" type="text" name="size"></td>
+                <tr><th>+ часов</th><td><input class="select" type="text"  name="size_add_hours"></td>
+                <tr><th>Переносить в архив длительного хранения</th><td><input class="select" type="text"  name="backup"></td>
+                <tr><th>Размер архива длительного хранения</th><td><input class="select" type="text"  name="backup_size" ></td>
+            </table>
+        {% endif %}
+        {% if url == 'command_line' %}
+            <table class="table_2">
+                <tr><th>Командная строка</th><td><input class="select" type="text" name="size" value="{{ command_line.value }}"></td>
+            </table>
+        {% endif %}
+        <input class="button24" type="submit" name="commit" value="Сохранить">
+    </form>
 </div>
 </body>
 </html>

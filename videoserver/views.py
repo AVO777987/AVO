@@ -72,7 +72,7 @@ def edit(request):
                       {'menu': menu, 'job': job, 'title': title, 'url': url, 'video_source': video_source,
                        'command_line': command_line, 'schedule': schedule, 'storage': storage})
     if url == 'storage':
-        storage = Storage.objects.all()
+        storage = Storage.objects.get(id=dev_id)
         return render(request, 'edit.html', {'menu': menu, 'storage': storage, 'title': title, 'url': url})
     if url == 'video_source':
         video_source = Video_source.objects.get(id=dev_id)
@@ -84,7 +84,7 @@ def edit(request):
         calendar = Calendar.objects.all()
         return render(request, 'edit.html', {'menu': menu, 'calendar': calendar, 'title': title, 'url': url})
     if url == 'command_line':
-        command_line = Command_line.objects.all()
+        command_line = Command_line.objects.get(id=dev_id)
         return render(request, 'edit.html', {'menu': menu, 'command_line': command_line, 'title': title, 'url': url})
     if url == 'drive':
         drive = Drive.objects.get(id=dev_id)
@@ -96,7 +96,7 @@ def edit(request):
         log = Log.objects.all()
         return render(request, 'edit.html', {'menu': menu, 'log': log, 'title': title, 'url': url})
     if url == 'schedule':
-        schedule = Schedule.objects.all()
+        schedule = Schedule.objects.get(id=dev_id)
         return render(request, 'edit.html', {'menu': menu, 'schedule': schedule, 'title': title, 'url': url})
 
 
@@ -231,7 +231,90 @@ def update(request):
             Video_source.objects.filter(id=video_source_id).update(url=url,
                                                                    options=options)
         return HttpResponseRedirect("/videoserver/?cat=video_source")
-
+    if category_url == 'schedule':
+        schedule = Schedule()
+        if request.POST.get('calendar') != "":
+            calendar = request.POST.get('calendar')
+        else:
+            calendar = schedule.calendar
+        if request.POST.get('calendar') != "":
+            week_days = request.POST.get('week_days')
+        else:
+            week_days = schedule.week_days
+        if request.POST.get('hours') != "":
+            hours = request.POST.get('hours')
+        else:
+            hours = schedule.hours
+        if request.POST.get('event_second_before') != "":
+            event_second_before = request.POST.get('event_second_before')
+        else:
+            event_second_before = schedule.event_second_before
+        if request.POST.get('event_second_after') != "":
+            event_second_after = request.POST.get('event_second_after')
+        else:
+            event_second_after = schedule.event_second_after
+        if action == 'update':
+            schedule_id = request.POST.get('schedule_id')
+            Schedule.objects.filter(id=schedule_id).update(calendar=calendar,
+                                                           week_days=week_days,
+                                                           hours=hours,
+                                                           event_second_before=event_second_before,
+                                                           event_second_after=event_second_after)
+        if action == 'create':
+            schedule.id = uuid.uuid1()
+            schedule.calendar = calendar
+            schedule.week_days = week_days
+            schedule.hours = hours
+            schedule.event_second_before = event_second_before
+            schedule.event_second_after = event_second_after
+            schedule.save()
+        return HttpResponseRedirect("/videoserver/?cat=schedule")
+    if category_url == 'storage':
+        storage = Storage()
+        if request.POST.get('size') != "":
+            size = request.POST.get('size')
+        else:
+            size = storage.size
+        if request.POST.get('size_add_hours') != "":
+            size_add_hours = request.POST.get('size_add_hours')
+        else:
+            size_add_hours = storage.size_add_hours
+        if request.POST.get('backup') != "":
+            backup = request.POST.get('backup')
+        else:
+            backup = storage.backup
+        if request.POST.get('backup_size') != "":
+            backup_size = request.POST.get('backup_size')
+        else:
+            backup_size = storage.backup_size
+        if action == 'update':
+            storage_id = request.POST.get('storage_id')
+            Storage.objects.filter(id=storage_id).update(size=size,
+                                                         size_add_hours=size_add_hours,
+                                                         backup=backup,
+                                                         backup_size=backup_size)
+        if action == 'create':
+            storage.id = uuid.uuid1()
+            storage.size = size
+            storage.size_add_hours = size_add_hours
+            storage.backup = backup
+            storage.backup_size = backup_size
+            storage.save()
+        return HttpResponseRedirect("/videoserver/?cat=storage")
+    if category_url == 'command_line':
+        command_line = Command_line()
+        if request.POST.get('value') != "":
+            value = request.POST.get('value')
+        else:
+            value = command_line.value
+        if action == 'update':
+            command_line_id = request.POST.get('command_line_id')
+            Command_line.objects.filter(id=command_line_id).update(value=value)
+        if action == 'create':
+            command_line.id = uuid.uuid1()
+            command_line.value = value
+            command_line.save()
+        return HttpResponseRedirect("/videoserver/?cat=command_line")
 
 def create(request):
     category_url = request.GET.get('cat', '')
@@ -254,9 +337,13 @@ def create(request):
                        'command_line': command_line, 'schedule': schedule, 'storage': storage})
     if url == 'drive':
         return render(request, 'create.html', {'menu': menu, 'title': title, 'url': url})
-
     if url == 'backup':
         return render(request, 'create.html', {'menu': menu, 'title': title, 'url': url})
-
     if url == 'video_source':
+        return render(request, 'create.html', {'menu': menu, 'title': title, 'url': url})
+    if url == 'schedule':
+        return render(request, 'create.html', {'menu': menu, 'title': title, 'url': url})
+    if url == 'storage':
+        return render(request, 'create.html', {'menu': menu, 'title': title, 'url': url})
+    if url == 'command_line':
         return render(request, 'create.html', {'menu': menu, 'title': title, 'url': url})
