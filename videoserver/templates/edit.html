@@ -127,10 +127,10 @@
             <input type="hidden" name="smtp_server_id" value = "{{ smtp_server.id }}">
             <table class="table_2">
                 <tr><th>Видеосервер</th><td><input class="select" type="text" name="videoserver" value="{{ smtp_server.videoserver }}"></td>
-                <tr><th>Хост</th><td><input class="select" type="text" name="host" value="{{ command_line.host }}"></td>
-                <tr><th>Приёмный порт</th><td><input class="select" type="text" name="port" value="{{ command_line.port }}"></td>
-                <tr><th>Кодировка</th><td><input class="select" type="text" name="encoding" value="{{ command_line.encoding }}"></td>
-                {% if drive.active == 0 %}
+                <tr><th>Хост</th><td><input class="select" type="text" name="host" value="{{ smtp_server.host }}"></td>
+                <tr><th>Приёмный порт</th><td><input class="select" type="text" name="port" value="{{ smtp_server.port }}"></td>
+                <tr><th>Кодировка</th><td><input class="select" type="text" name="encoding" value="{{ smtp_server.encoding }}"></td>
+                {% if smtp_server.active == 0 %}
                         <tr><th><input type="radio" name="active" value="1">Включена</th>
                         <tr><th><input type="radio" name="active" value="0" checked>Выключена</th>
                 {% else %}

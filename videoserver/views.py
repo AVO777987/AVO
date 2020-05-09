@@ -90,7 +90,7 @@ def edit(request):
         drive = Drive.objects.get(id=dev_id)
         return render(request, 'edit.html', {'menu': menu, 'drive': drive, 'title': title, 'url': url})
     if url == 'smtp_server':
-        smtp_server = Smtp_server.objects.all()
+        smtp_server = Smtp_server.objects.get(id=dev_id)
         return render(request, 'edit.html', {'menu': menu, 'smtp_server': smtp_server, 'title': title, 'url': url})
     if url == 'logs':
         log = Log.objects.all()
@@ -315,6 +315,42 @@ def update(request):
             command_line.value = value
             command_line.save()
         return HttpResponseRedirect("/videoserver/?cat=command_line")
+    if category_url == 'smtp_server':
+        smtp_server = Smtp_server()
+        if request.POST.get('videoserver') != "":
+            videoserver = request.POST.get('videoserver')
+        else:
+            videoserver = smtp_server.videoserver
+        if request.POST.get('host') != "":
+            host = request.POST.get('host')
+        else:
+            host = smtp_server.host
+        if request.POST.get('port') != "":
+            port = request.POST.get('port')
+        else:
+            port = smtp_server.port
+        if request.POST.get('encoding') != "":
+            encoding = request.POST.get('encoding')
+        else:
+            encoding = smtp_server.encoding
+        active = request.POST.get('active')
+        if action == 'update':
+            smtp_server_id = request.POST.get('smtp_server_id')
+            Smtp_server.objects.filter(id=smtp_server_id).update(videoserver=videoserver,
+                                                                 host=host,
+                                                                 port=port,
+                                                                 encoding=encoding,
+                                                                 active=active)
+        if action == 'create':
+            smtp_server.id = uuid.uuid1()
+            smtp_server.videoserver = videoserver
+            smtp_server.host = host
+            smtp_server.port = port
+            smtp_server.encoding = encoding
+            smtp_server.active = active
+            smtp_server.save()
+        return HttpResponseRedirect("/videoserver/?cat=smtp_server")
+
 
 def create(request):
     category_url = request.GET.get('cat', '')
@@ -335,6 +371,11 @@ def create(request):
         return render(request, 'create.html',
                       {'menu': menu, 'title': title, 'url': url, 'video_source': video_source,
                        'command_line': command_line, 'schedule': schedule, 'storage': storage})
+    else:
+        return render(request, 'create.html', {'menu': menu, 'title': title, 'url': url})
+
+
+'''
     if url == 'drive':
         return render(request, 'create.html', {'menu': menu, 'title': title, 'url': url})
     if url == 'backup':
@@ -347,3 +388,4 @@ def create(request):
         return render(request, 'create.html', {'menu': menu, 'title': title, 'url': url})
     if url == 'command_line':
         return render(request, 'create.html', {'menu': menu, 'title': title, 'url': url})
+'''
